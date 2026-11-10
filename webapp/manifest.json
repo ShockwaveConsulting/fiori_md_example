@@ -1,0 +1,22 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "sales.orders", "type": "application", "title": "Sales Orders",
+    "description": "Browse sales orders, items, and item partners",
+    "applicationVersion": { "version": "1.0.0" },
+    "dataSources": {
+      "mainService": { "uri": "/sap/opu/odata/sap/API_SALES_ORDER_SRV/", "type": "OData", "settings": { "odataVersion": "2.0" } },
+      "businessPartnerService": { "uri": "/sap/opu/odata/sap/API_BUSINESS_PARTNER/", "type": "OData", "settings": { "odataVersion": "2.0" } }
+    }
+  },
+  "sap.ui": { "technology": "UI5", "deviceTypes": { "desktop": true, "tablet": true, "phone": true } },
+  "sap.ui5": {
+    "dependencies": { "minUI5Version": "1.136.0", "libs": { "sap.m": {}, "sap.ui.core": {}, "sap.ui.layout": {} } },
+    "contentDensities": { "compact": true, "cozy": true },
+    "models": {
+      "": { "type": "sap.ui.model.odata.v2.ODataModel", "dataSource": "mainService", "settings": { "useBatch": false, "defaultBindingMode": "OneWay", "defaultCountMode": "None" } },
+      "businessPartners": { "type": "sap.ui.model.odata.v2.ODataModel", "dataSource": "businessPartnerService", "settings": { "useBatch": false, "defaultBindingMode": "OneWay", "defaultCountMode": "None" } }
+    },
+    "rootView": { "viewName": "sales.orders.view.App", "type": "XML", "async": true, "id": "app" }
+  }
+}

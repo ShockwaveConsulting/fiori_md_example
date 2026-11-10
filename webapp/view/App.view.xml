@@ -1,0 +1,47 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:layout="sap.ui.layout" controllerName="sales.orders.controller.App" displayBlock="true">
+  <App><pages><Page title="Sales Orders" class="sapUiResponsiveContentPadding">
+    <headerContent><ObjectStatus text="{state>/mode}" state="Information"/></headerContent>
+    <content>
+      <MessageStrip text="{state>/error}" type="Error" showIcon="true" visible="{= !!${state>/error} }" class="sapUiSmallMarginBottom"/>
+      <NavContainer id="navigation">
+        <Page id="ordersPage" title="Order overview" showHeader="false"><content>
+          <VBox class="sapUiSmallMarginBottom"><Title text="Sales order overview" level="H1"/><Text text="Find an order, inspect its items, and view every item partner."/></VBox>
+          <OverflowToolbar><SearchField width="20rem" placeholder="Search sales order number" search="onSearch"/><ToolbarSpacer/><Button text="Sort order" icon="sap-icon://sort" press="onSort"/><Button icon="sap-icon://refresh" tooltip="Refresh orders" press="onRefresh"/></OverflowToolbar>
+          <Table id="ordersTable" items="{state>/orders}" busy="{state>/busy}" noDataText="No sales orders found. Try another search.">
+            <columns><Column><Text text="Sales order"/></Column><Column minScreenWidth="Tablet" demandPopin="true"><Text text="Sold-to party"/></Column><Column minScreenWidth="Tablet" demandPopin="true"><Text text="Sales organization"/></Column><Column hAlign="End"><Text text="Net amount"/></Column></columns>
+            <items><ColumnListItem type="Navigation" press="onOrderPress"><cells><ObjectIdentifier title="{state>SalesOrder}" text="{state>SalesOrderType}"/><Text text="{state>SoldToParty}"/><Text text="{state>SalesOrganization}"/><ObjectNumber number="{state>TotalNetAmount}" unit="{state>TransactionCurrency}"/></cells></ColumnListItem></items>
+          </Table>
+          <OverflowToolbar><Button text="Previous" press="onPrevious" enabled="{= ${state>/skip} > 0 &amp;&amp; !${state>/busy} }"/><Text text="{state>/pageLabel}"/><Button text="Next" press="onNext" enabled="{= ${state>/hasNext} &amp;&amp; !${state>/busy} }"/></OverflowToolbar>
+        </content></Page>
+        <Page id="itemsPage" title="{= 'Sales order ' + ${state>/selectedOrder/SalesOrder} }" showNavButton="true" navButtonPress="onBackToOrders"><content>
+          <ObjectHeader title="{state>/selectedOrder/SalesOrder}" intro="Sales order" number="{state>/selectedOrder/TotalNetAmount}" numberUnit="{state>/selectedOrder/TransactionCurrency}"><attributes><ObjectAttribute title="Sold-to party" text="{state>/selectedOrder/SoldToParty}"/></attributes></ObjectHeader>
+          <Table items="{state>/items}" busy="{state>/busy}" headerText="Order items" noDataText="No items found for this order."><columns><Column><Text text="Item"/></Column><Column><Text text="Material / description"/></Column><Column hAlign="End"><Text text="Quantity"/></Column></columns><items><ColumnListItem type="Navigation" press="onItemPress"><cells><Text text="{state>SalesOrderItem}"/><ObjectIdentifier title="{state>Material}" text="{state>SalesOrderItemText}"/><ObjectNumber number="{state>RequestedQuantity}" unit="{state>RequestedQuantityUnit}"/></cells></ColumnListItem></items></Table>
+          <Button text="Load more items" visible="{= !!${state>/itemsNext} }" enabled="{= !${state>/busy} }" press="onMoreItems"/>
+        </content></Page>
+        <Page id="partnersPage" title="{= 'Item ' + ${state>/selectedItem/SalesOrderItem} + ' partners' }" showNavButton="true" navButtonPress="onBackToItems"><content>
+          <ObjectHeader title="{state>/selectedItem/Material}" intro="{state>/selectedItem/SalesOrderItemText}"/>
+          <MessageStrip text="Names are retrieved from business partner master data. Name unavailable means the name could not be resolved; supplier, personnel, and contact person are identifiers from the item partner assignment." type="Information" showIcon="true"/>
+          <Table id="partnersTable" items="{state>/partners}" busy="{state>/busy}" noDataText="No partner assignments found for this item.">
+            <columns>
+              <Column><Text text="Partner name"/></Column>
+              <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Function"/></Column>
+              <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Customer"/></Column>
+              <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Supplier"/></Column>
+              <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Personnel"/></Column>
+              <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Contact person"/></Column>
+            </columns>
+            <items><ColumnListItem><cells>
+              <Text text="{state>PartnerName}"/>
+              <Text text="{state>PartnerFunction}"/>
+              <Text text="{state>Customer}"/>
+              <Text text="{state>Supplier}"/>
+              <Text text="{state>Personnel}"/>
+              <Text text="{state>ContactPerson}"/>
+            </cells></ColumnListItem></items>
+          </Table>
+          <Button text="Load more partners" visible="{= !!${state>/partnersNext} }" enabled="{= !${state>/busy} }" press="onMorePartners"/>
+        </content></Page>
+      </NavContainer>
+    </content>
+  </Page></pages></App>
+</mvc:View>

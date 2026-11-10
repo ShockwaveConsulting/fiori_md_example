@@ -1,0 +1,14 @@
+{
+  "name": "fiori-sales-orders",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.9" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env.local server.mjs",
+    "start:mock": "node server.mjs --mock",
+    "metadata": "node --env-file=.env.local scripts/fetchMetadata.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs"
+  }
+}
